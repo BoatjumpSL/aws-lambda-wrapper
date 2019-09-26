@@ -1,0 +1,123 @@
+{
+    "resource": "/authorize",
+    "path": "/authorize",
+    "httpMethod": "GET",
+    "headers": {
+        "Accept": "*/*",
+        "Accept-Encoding": "gzip, deflate",
+        "Cache-Control": "no-cache",
+        "CloudFront-Forwarded-Proto": "https",
+        "CloudFront-Is-Desktop-Viewer": "true",
+        "CloudFront-Is-Mobile-Viewer": "false",
+        "CloudFront-Is-SmartTV-Viewer": "false",
+        "CloudFront-Is-Tablet-Viewer": "false",
+        "CloudFront-Viewer-Country": "ES",
+        "Host": "xxxxxxxx.execute-api.xx-xxxx-1.amazonaws.com",
+        "Postman-Token": "45ac54c1-28e1-4321-bbd7-f9edb1fc771e",
+        "User-Agent": "PostmanRuntime/7.13.0",
+        "Via": "1.1 xxxxxxxxxxxxxxxxxxxxxxxxxxxx.cloudfront.net (CloudFront)",
+        "X-Amz-Cf-Id": "xxxxxxxxxxxxxxxxxxxxxxxxx-niNXSnA==",
+        "X-Amzn-Trace-Id": "Root=1-5d012b6f-xxxxxxxxxxxxxxxxxxxx",
+        "X-Forwarded-For": "46.25.71.106, 64.252.132.77",
+        "X-Forwarded-Port": "443",
+        "X-Forwarded-Proto": "https"
+    },
+    "multiValueHeaders": {
+        "Accept": [
+            "*/*"
+        ],
+        "Accept-Encoding": [
+            "gzip, deflate"
+        ],
+        "Cache-Control": [
+            "no-cache"
+        ],
+        "CloudFront-Forwarded-Proto": [
+            "https"
+        ],
+        "CloudFront-Is-Desktop-Viewer": [
+            "true"
+        ],
+        "CloudFront-Is-Mobile-Viewer": [
+            "false"
+        ],
+        "CloudFront-Is-SmartTV-Viewer": [
+            "false"
+        ],
+        "CloudFront-Is-Tablet-Viewer": [
+            "false"
+        ],
+        "CloudFront-Viewer-Country": [
+            "ES"
+        ],
+        "Host": [
+            "o3p1gdjldb.execute-api.eu-west-1.amazonaws.com"
+        ],
+        "Postman-Token": [
+            "45ac54c1-28e1-4321-bbd7-f9edb1fc771e"
+        ],
+        "User-Agent": [
+            "PostmanRuntime/7.13.0"
+        ],
+        "Via": [
+            "1.1 713e5c81a0f7ad564b97cf451e92aaac.cloudfront.net (CloudFront)"
+        ],
+        "X-Amz-Cf-Id": [
+            "wuurfZcytiW3zcItjB7narc0Q17MYZAF767P9mTazFpijY-niNXSnA=="
+        ],
+        "X-Amzn-Trace-Id": [
+            "Root=1-5d012b6f-79d6b088a7b3e7d458b08e08"
+        ],
+        "X-Forwarded-For": [
+            "46.25.71.106, 64.252.132.77"
+        ],
+        "X-Forwarded-Port": [
+            "443"
+        ],
+        "X-Forwarded-Proto": [
+            "https"
+        ]
+    },
+    "queryStringParameters": {
+        "token": "5678"
+    },
+    "multiValueQueryStringParameters": {
+        "token": ["5678"]
+    },
+    "pathParameters": {
+        "id": "1234"
+    },
+    "stageVariables": null,
+    "requestContext": {
+        "resourceId": "xxxxxx",
+        "resourcePath": "/authorize",
+        "httpMethod": "GET",
+        "extendedRequestId": "xxxxxxxx",
+        "requestTime": "12/Jun/2019: 16:42:23 +0000",
+        "path": "/dev/authorize",
+        "accountId": "015414317816",
+        "protocol": "HTTP/1.1",
+        "stage": "dev",
+        "domainPrefix": "o3p1gdjldb",
+        "requestTimeEpoch": 1560357743432,
+        "requestId": "0db3ec88-8d31-11e9-9274-f19c67c155bc",
+        "identity": {
+            "cognitoIdentityPoolId": null,
+            "accountId": null,
+            "cognitoIdentityId": null,
+            "caller": null,
+            "sourceIp": "46.25.71.106",
+            "principalOrgId": null,
+            "accessKey": null,
+            "cognitoAuthenticationType": null,
+            "cognitoAuthenticationProvider": null,
+            "userArn": null,
+            "userAgent": "PostmanRuntime/7.13.0",
+            "user": null
+        },
+        "domainName": "xxxxxx.execute-api.xx-xxx-1.amazonaws.com",
+        "apiId": "xxxxxx"
+    },
+    "body": null,
+    "isBase64Encoded": false
+}

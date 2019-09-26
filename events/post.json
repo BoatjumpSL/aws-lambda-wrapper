@@ -1,0 +1,121 @@
+{
+    "resource": "/send",
+    "path": "/external-gmail/send",
+    "httpMethod": "POST",
+    "headers": {
+      "Accept": "*/*",
+      "Accept-Encoding": "gzip, deflate",
+      "Cache-Control": "no-cache",
+      "CloudFront-Forwarded-Proto": "https",
+      "CloudFront-Is-Desktop-Viewer": "true",
+      "CloudFront-Is-Mobile-Viewer": "false",
+      "CloudFront-Is-SmartTV-Viewer": "false",
+      "CloudFront-Is-Tablet-Viewer": "false",
+      "CloudFront-Viewer-Country": "ES",
+      "Content-Type": "text/plain",
+      "Host": "dev-api.boatjump.com",
+      "Postman-Token": "b9c0db7d-31df-4474-9528-8e1d8d1dc869",
+      "User-Agent": "PostmanRuntime/7.17.1",
+      "Via": "1.1 c02c12149d44c9deefaab126c94c3d3f.cloudfront.net (CloudFront)",
+      "X-Amz-Cf-Id": "wr9YbLwrr1LClBkoSd0rA0eTIcwmmSbXHzeGKXT5sNOeu6IjRQPshw==",
+      "X-Amzn-Trace-Id": "Root=1-5d80c234-234ffe49f719c9f4f7af3e60",
+      "X-Forwarded-For": "46.25.71.106, 52.46.44.176",
+      "X-Forwarded-Port": "443",
+      "X-Forwarded-Proto": "https"
+    },
+    "multiValueHeaders": {
+      "Accept": [
+        "*/*"
+      ],
+      "Accept-Encoding": [
+        "gzip, deflate"
+      ],
+      "Cache-Control": [
+        "no-cache"
+      ],
+      "CloudFront-Forwarded-Proto": [
+        "https"
+      ],
+      "CloudFront-Is-Desktop-Viewer": [
+        "true"
+      ],
+      "CloudFront-Is-Mobile-Viewer": [
+        "false"
+      ],
+      "CloudFront-Is-SmartTV-Viewer": [
+        "false"
+      ],
+      "CloudFront-Is-Tablet-Viewer": [
+        "false"
+      ],
+      "CloudFront-Viewer-Country": [
+        "ES"
+      ],
+      "Content-Type": [
+        "text/plain"
+      ],
+      "Host": [
+        "dev-api.boatjump.com"
+      ],
+      "Postman-Token": [
+        "b9c0db7d-31df-4474-9528-8e1d8d1dc869"
+      ],
+      "User-Agent": [
+        "PostmanRuntime/7.17.1"
+      ],
+      "Via": [
+        "1.1 c02c12149d44c9deefaab126c94c3d3f.cloudfront.net (CloudFront)"
+      ],
+      "X-Amz-Cf-Id": [
+        "wr9YbLwrr1LClBkoSd0rA0eTIcwmmSbXHzeGKXT5sNOeu6IjRQPshw=="
+      ],
+      "X-Amzn-Trace-Id": [
+        "Root=1-5d80c234-234ffe49f719c9f4f7af3e60"
+      ],
+      "X-Forwarded-For": [
+        "46.25.71.106, 52.46.44.176"
+      ],
+      "X-Forwarded-Port": [
+        "443"
+      ],
+      "X-Forwarded-Proto": [
+        "https"
+      ]
+    },
+    "queryStringParameters": null,
+    "multiValueQueryStringParameters": null,
+    "pathParameters": null,
+    "stageVariables": null,
+    "requestContext": {
+      "resourceId": "rs81zr",
+      "resourcePath": "/send",
+      "httpMethod": "POST",
+      "extendedRequestId": "AKNILGPVDoEF0HQ=",
+      "requestTime": "17/Sep/2019:11:23:32 +0000",
+      "path": "/external-gmail/send",
+      "accountId": "015414317816",
+      "protocol": "HTTP/1.1",
+      "stage": "dev",
+      "domainPrefix": "dev-api",
+      "requestTimeEpoch": 1568719412267,
+      "requestId": "c2a116f3-84b8-4d64-893e-c3243c528357",
+      "identity": {
+        "cognitoIdentityPoolId": null,
+        "accountId": null,
+        "cognitoIdentityId": null,
+        "caller": null,
+        "sourceIp": "46.25.71.106",
+        "principalOrgId": null,
+        "accessKey": null,
+        "cognitoAuthenticationType": null,
+        "cognitoAuthenticationProvider": null,
+        "userArn": null,
+        "userAgent": "PostmanRuntime/7.17.1",
+        "user": null
+      },
+      "domainName": "dev-api.boatjump.com",
+      "apiId": "6encpxt9xc"
+    },
+    "body": "{\n\t\"to\": \"s.falcon@boatjump.com\",\n\t\"from\": \"s.falcon@boatjump.com\",\n\t\"subject\": \"test\",\n\t\"message\": \"test, test, test\"\n}",
+    "isBase64Encoded": false
+}

@@ -1,0 +1,30 @@
+{
+  "name": "aws-lambda-wrapper",
+  "version": "1.0.0",
+  "description": "Wrapper for aws lambda functions that maps the input and output correctly depending on the event source. It supports http, stepfunctions and direct events.",
+  "main": "wrapper.js",
+  "scripts": {
+    "test": "mocha wrapper.unit.test.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/BoatjumpSL/aws-lambda-wrapper.git"
+  },
+  "keywords": [
+    "aws",
+    "lambda",
+    "step",
+    "functions",
+    "events",
+    "serverless"
+  ],
+  "author": "José Vicente Sogorb",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/BoatjumpSL/aws-lambda-wrapper/issues"
+  },
+  "homepage": "https://github.com/BoatjumpSL/aws-lambda-wrapper#readme",
+  "devDependencies": {
+    "chai": "^4.2.0"
+  }
+}
