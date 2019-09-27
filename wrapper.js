@@ -51,10 +51,12 @@ function parseMultiValueQueryStringParameters(params) {
 }
 
 function parseBody(body) {
+    if(!body) return undefined;
     try{
         return JSON.parse(body);
     }
     catch(e){
+        log(e);
         return {};
     }
 }
