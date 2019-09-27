@@ -7,7 +7,7 @@ const EVENT_SOURCE = {
 let log;
 
 module.exports = function(fn, logger) {
-    log = logger;
+    log = logger || console;
     return async (event, context) => {
         const eventSource = getEventSource(event, context);
         const data = mapEvent(eventSource, event, context);

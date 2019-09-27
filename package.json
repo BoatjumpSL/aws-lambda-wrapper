@@ -1,6 +1,6 @@
 {
-  "name": "aws-lambda-wrapper",
-  "version": "1.0.0",
+  "name": "aws-lambda-event-wrapper",
+  "version": "1.0.1",
   "description": "Wrapper for aws lambda functions that maps the input and output correctly depending on the event source. It supports http, stepfunctions and direct events.",
   "main": "wrapper.js",
   "scripts": {
