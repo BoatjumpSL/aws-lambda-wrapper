@@ -5,15 +5,23 @@ const EVENT_SOURCE = {
 }
 
 let log;
+let sns;
 
-module.exports = function(fn, logger) {
-    log = logger || console;
+module.exports = function(fn, config) {
+    log = getParam(config, 'logger', console);
+    topicArn = getParam(config, 'topicArn', undefined);
+
     return async (event, context) => {
         const eventSource = getEventSource(event, context);
         const data = mapEvent(eventSource, event, context);
         const {resp, error} = await safeFnExecution(fn, data);
+        await sendNofication(topicArn, resp, error);
         return mapResponse(eventSource, resp, error);
     }
+}
+
+function getParam(config, key, defaultValue) {
+    return (config && config[key]) ? config[key] : defaultValue;
 }
 
 function getEventSource(event, context){
@@ -56,9 +64,30 @@ function parseBody(body) {
         return JSON.parse(body);
     }
     catch(e){
-        log(e);
+        log.error(e);
         return {};
     }
+}
+
+async function sendNofication(TopicArn, resp, error) {
+    try{
+        if (error || !TopicArn) return;
+        const Message = JSON.stringify(resp);
+        const message = await getSNS().publish({Message, TopicArn}).promise()
+        log.debug(message);
+    }
+    catch(e){
+        e.message = `Fail while sending a notification to ${TopicArn}. `+e.message;
+        log.error(e);
+    }
+}
+
+function getSNS(){
+    if (sns) return sns;
+    const AWS = require('aws-sdk');
+    AWS.config.update({region: 'eu-west-1'});
+    sns = new AWS.SNS({apiVersion: '2010-03-31'});
+    return sns;
 }
 
 function mapResponse(mode, response, error) {
