@@ -22,6 +22,31 @@ describe('wrapper', () => {
         expect(fn).to.be.a('function');
     });
 
+    describe('on step functions events', () => {
+
+        it('must parse correctly the @input parameters and set the response into @output', async () => {
+            event = {
+                "@input.a": 1,
+                "@input.b": 2,
+                "@state": {
+                  "Name": "testFn",
+                  "EnteredTime": "2019-09-29T15:13:54.296Z",
+                  "RetryCount": 0
+                },
+                "@output": {
+                  "HelloWorld1": {
+                    "value": null
+                  }
+                }
+              };
+            const context = {functionName: 'fn'}
+            const resp = await fn(event, context);
+            expect(resp).to.contain.keys(['@output']);
+            expect(resp['@output']).to.contain.keys(['testFn']);
+            expect(resp['@output'].testFn).to.be.deep.equal({ a: 1, b: 2, functionName: 'fn' });
+        });
+    });
+
     describe('after execute the function', () => {
         it('must work with a basic event', async () => {
             const event = {hello: "world"};

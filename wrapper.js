@@ -1,3 +1,5 @@
+var set = require('lodash.set');
+
 const EVENT_SOURCE = {
     HTTP         : 'http',
     STEP_FUNCTION: 'stepFunctions',
@@ -12,7 +14,6 @@ module.exports = function(fn, config) {
     topicArn = getParam(config, 'topicArn', undefined);
 
     return async (event, context) => {
-        console.debug(event);
         const eventSource = getEventSource(event, context);
         const data = mapEvent(eventSource, event, context);
         const {resp, error} = await safeFnExecution(fn, data);
@@ -28,24 +29,43 @@ function getParam(config, key, defaultValue) {
 function getEventSource(event, context){
     return (event   &&   event.httpMethod)   ? EVENT_SOURCE.HTTP :
            (context && context.functionName) ? EVENT_SOURCE.STEP_FUNCTION :
-                                   EVENT_SOURCE.BASIC;
+                                               EVENT_SOURCE.BASIC;
 }
 
 function mapEvent(eventSource, event, context){
-    return  (eventSource === EVENT_SOURCE.BASIC) ? {
-                ...event,
-                ...context
-            } :
-            (eventSource === EVENT_SOURCE.STEP_FUNCTION) ? {
-                ...(event['@input'] || event),
-                ...context
-            } :    
-            {
-                ...parseMultiValueQueryStringParameters(event.multiValueQueryStringParameters),
-                ...event.pathParameters,
-                ...parseBody(event.body),
-                ...context
-            };
+    return  (eventSource === EVENT_SOURCE.BASIC)         ? mapBasicEvent(event, context) :
+            (eventSource === EVENT_SOURCE.STEP_FUNCTION) ? mapStepFunctionsEvent(event, context) :    
+                                                           mapHttpEvent(event, context);
+}
+
+function mapBasicEvent(event, context){
+    return {...event, ...context};
+}
+
+function mapStepFunctionsEvent(event, context){
+    try {
+        const eventInput = Object.keys(event)
+        .filter((key) => key.indexOf('@input') === 0)
+        .reduce((acc, item) => {
+            const key = item.split('@input.')[1];
+            set(acc, key, event[item]);
+            return acc;
+        }, {});
+        return {...eventInput, ...context};
+    }
+    catch(e) {
+        return mapBasicEvent(event, context);
+    }
+    
+}
+
+function mapHttpEvent(event, context){
+    return {
+        ...parseMultiValueQueryStringParameters(event.multiValueQueryStringParameters),
+        ...event.pathParameters,
+        ...parseBody(event.body),
+        ...context
+    };
 }
 
 async function safeFnExecution(fn, data){
