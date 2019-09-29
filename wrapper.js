@@ -12,11 +12,12 @@ module.exports = function(fn, config) {
     topicArn = getParam(config, 'topicArn', undefined);
 
     return async (event, context) => {
+        console.debug(event);
         const eventSource = getEventSource(event, context);
         const data = mapEvent(eventSource, event, context);
         const {resp, error} = await safeFnExecution(fn, data);
         await sendNofication(topicArn, resp, error);
-        return mapResponse(eventSource, resp, error);
+        return mapResponse(eventSource, event, resp, error);
     }
 }
 
@@ -31,14 +32,20 @@ function getEventSource(event, context){
 }
 
 function mapEvent(eventSource, event, context){
-    return (eventSource === EVENT_SOURCE.BASIC) ? 
-        { ...event, ...context} :    
-        {
-            ...parseMultiValueQueryStringParameters(event.multiValueQueryStringParameters),
-            ...event.pathParameters,
-            ...parseBody(event.body),
-            ...context
-        };
+    return  (eventSource === EVENT_SOURCE.BASIC) ? {
+                ...event,
+                ...context
+            } :
+            (eventSource === EVENT_SOURCE.STEP_FUNCTION) ? {
+                ...(event['@input'] || event),
+                ...context
+            } :    
+            {
+                ...parseMultiValueQueryStringParameters(event.multiValueQueryStringParameters),
+                ...event.pathParameters,
+                ...parseBody(event.body),
+                ...context
+            };
 }
 
 async function safeFnExecution(fn, data){
@@ -90,9 +97,9 @@ function getSNS(){
     return sns;
 }
 
-function mapResponse(mode, response, error) {
+function mapResponse(mode, event, response, error) {
     return (mode === EVENT_SOURCE.HTTP)          ? mapHttpResponse(response, error) :
-           (mode === EVENT_SOURCE.STEP_FUNCTION) ? mapStepFunctionResponse(response, error) :
+           (mode === EVENT_SOURCE.STEP_FUNCTION) ? mapStepFunctionResponse(event, response, error) :
                                                    mapBasicResponse(response, error);
 }
 
@@ -104,9 +111,12 @@ function mapHttpResponse(resp, error) {
     };
 }
 
-function mapStepFunctionResponse(resp, error) {
+function mapStepFunctionResponse(event, resp, error) {
     if(error) throw error;
-    return resp.body;
+    const stateName = event['@state'].Name;
+    event['@output'] = event['@output'] || {};
+    event['@output'][stateName] = resp.body
+    return event;
 }
 
 function mapBasicResponse(resp, error) {
