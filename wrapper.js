@@ -124,10 +124,16 @@ function mapResponse(mode, event, response, error) {
 }
 
 function mapHttpResponse(resp, error) {
-    if(error) log.error(error);
+    if(error){
+        log.error(error);
+        return {
+            statusCode: 500,
+            body: JSON.stringify({message: error.message})
+        }
+    }
     return {
         statusCode: (resp.code || 500),
-        body: JSON.stringify(resp.body || {message: error.message})
+        body: JSON.stringify(resp.body)
     };
 }
 
