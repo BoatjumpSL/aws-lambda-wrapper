@@ -14,6 +14,9 @@ module.exports = function(fn, config) {
     topicArn = getParam(config, 'topicArn', undefined);
 
     return async (event, context) => {
+        if (event.source === 'serverless-plugin-warmup') {
+            return 'Lambda is warm';
+        }
         const eventSource = getEventSource(event, context);
         const data = mapEvent(eventSource, event, context);
         const {resp, error} = await safeFnExecution(fn, data);

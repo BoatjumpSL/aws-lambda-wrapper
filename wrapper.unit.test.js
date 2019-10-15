@@ -22,6 +22,12 @@ describe('wrapper', () => {
         expect(fn).to.be.a('function');
     });
 
+    it('on warm up events must return the sample warmup text', async () => {
+        const event = {source: 'serverless-plugin-warmup'};
+        const resp = await fn(event);
+        expect(resp).to.be.equal('Lambda is warm');
+    });
+
     describe('on step functions events', () => {
 
         it('must parse correctly the @input parameters and set the response into @output', async () => {
