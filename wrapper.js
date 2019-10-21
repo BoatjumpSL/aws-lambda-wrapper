@@ -39,7 +39,7 @@ module.exports = function wrapper(fn, config) {
     function getEventSource(event, context){
         return (event   &&   event.httpMethod)   ? EVENT_SOURCE.HTTP :
                (context && context.functionName) ? EVENT_SOURCE.STEP_FUNCTION :
-                                                 EVENT_SOURCE.BASIC;
+                                                   EVENT_SOURCE.BASIC;
     }
 
     function mapEvent(eventSource, event, context){
