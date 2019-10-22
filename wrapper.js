@@ -45,7 +45,7 @@ module.exports = function wrapper(fn, config) {
     function mapEvent(eventSource, event, context){
         return  (eventSource === EVENT_SOURCE.BASIC)         ? mapBasicEvent(event, context) :
                 (eventSource === EVENT_SOURCE.STEP_FUNCTION) ? mapStepFunctionsEvent(event, context) :    
-                                                               httpEvent.parse(event, context);
+                                                               httpEvent.parse(event, context, log);
     }
 
     function mapBasicEvent(event, context){
@@ -100,13 +100,10 @@ module.exports = function wrapper(fn, config) {
     }
 
     function mapResponse(mode, event, response, error) {
-        return (mode === EVENT_SOURCE.HTTP)          ? httpEvent.response(response, error) :
+        return (mode === EVENT_SOURCE.HTTP)          ? httpEvent.response(response, error, log) :
             (mode === EVENT_SOURCE.STEP_FUNCTION) ? mapStepFunctionResponse(event, response, error) :
                                                     mapBasicResponse(response, error);
     }
-
-
-
 
     function mapStepFunctionResponse(event, resp, error) {
         if(error) throw error;
@@ -120,6 +117,4 @@ module.exports = function wrapper(fn, config) {
         if(error) throw error;
         return resp.body;
     }
-
 }
-
