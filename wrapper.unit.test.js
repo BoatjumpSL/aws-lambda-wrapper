@@ -1,4 +1,6 @@
-const {expect} = require('chai');
+const chai = require('chai')
+const expect = chai.expect;
+chai.use(require('chai-as-promised'));
 const wrapper = require('./wrapper');
 
 function requireUncached(module){
@@ -8,7 +10,8 @@ function requireUncached(module){
 
 let lastLog;
 
-const fnMock = async (event) => ({code: 200, body: event});
+const fnMock = (event, callback) => callback(null, {code: 200, body: event});
+
 const logMock = {
     error: (data) => lastLog = data,
     debug: (data) => lastLog = data
@@ -48,21 +51,51 @@ describe('wrapper', () => {
         fn = wrapper(fnMock, {log: logMock});
         const event = {event: "hello"};
 
-        it('must allow usage with context', (done) => {
+        it('must allow usage with context', async () => {
             const context = {context: "world"}
-            fn(event, context, (err, data) => {
-                expect(err).to.be.equal(null);
-                expect(data).to.be.deep.equal({...event, ...context});
-                done();
-            });
+            const resp = await fn(event, context);
+            expect(resp).to.be.deep.equal({...event, ...context});
+        });
+
+        it('must allow usage without context', async () => {
+            const resp = await fn(event);
+            expect(resp).to.be.deep.equal(event);
         });
     
-        it('must allow usage without context', (done) => {
-            fn(event, (err, data) => {
-                expect(err).to.be.equal(null);
-                expect(data).to.be.deep.equal(event);
-                done();
-            });
+        it('must return a controlled error when the callback contains an error', async () => {
+            const error = new Error('controlled Error');
+            const fnMockUsingCallback = (event, callback) => {
+                callback(error);
+            };
+            const fn = wrapper(fnMockUsingCallback, {log: logMock});
+            const respPromise = fn(event);
+            await expect(respPromise).to.be.rejectedWith(Error);
+        });
+
+        it('must return a controlled error when the function thows an exception', async () => {
+            const error = new Error('controlled Error');
+            const fnMockUsingCallback = (event, callback) => {
+                throw(error);
+            };
+            const fn = wrapper(fnMockUsingCallback, {log: logMock});
+            const respPromise = fn(event);
+            await expect(respPromise).to.be.rejectedWith(Error);
+        });
+
+        it('must execute callback on top function. Have to be executed only one time and the function does not return response', async () => {
+            const event = requireUncached('./events/get.json');
+            const fnResponse = {
+                statusCode: 200,
+                headers: {'Content-Type': 'image/gif'},
+                body: 'pixelString',
+                isBase64Encoded: true
+              };
+            const fnMockUsingCallback = (event, callback) => {
+                callback(null, fnResponse);
+            };
+            const fn = wrapper(fnMockUsingCallback, {log: logMock});
+            const resp = await fn(event);
+            expect(resp).to.be.deep.equal(fnResponse);
         });
     });
 

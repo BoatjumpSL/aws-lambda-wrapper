@@ -1,6 +1,6 @@
 {
   "name": "aws-lambda-event-wrapper",
-  "version": "1.2.4",
+  "version": "1.2.5",
   "private": false,
   "publishConfig": {
     "registry": "https://registry.npmjs.org"
