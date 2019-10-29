@@ -20,14 +20,17 @@ module.exports = function wrapper(fn, config) {
             .catch((err) => callback(err));
     }
 
-    async function promiseWrapper(event, context) {
-        if (typeof context === 'function') context = undefined;
+    async function promiseWrapper(event, context, callback) {
+        if (typeof context === 'function') {
+          callback = context;
+          context = undefined;
+        }
         if (event.source === 'serverless-plugin-warmup') {
             return 'Lambda is warm';
         }
         const eventSource = getEventSource(event, context);
         const data = mapEvent(eventSource, event, context);
-        const {resp, error} = await safeFnExecution(fn, data);
+        const {resp, error} = await safeFnExecution(fn, data, callback);
         await sendNofication(topicArn, resp, error);
         return mapResponse(eventSource, event, resp, error);
     }
@@ -69,9 +72,9 @@ module.exports = function wrapper(fn, config) {
         
     }
 
-    async function safeFnExecution(fn, data){
+    async function safeFnExecution(fn, data, callback) {
         try {
-            return {resp: await fn(data)};
+          return {resp: await fn(data, callback)};
         }
         catch(e){
             return {error: e};
