@@ -12,25 +12,13 @@ module.exports = function wrapper(fn, config) {
     const log = getParam(config, 'logger', console);
     const topicArn = getParam(config, 'topicArn', undefined);
 
-    return function (...args){
-        const callback = arguments[arguments.length-1];
-        const resp = promiseWrapper(...args);
-        if(typeof callback !== 'function') return resp;
-        resp.then((data) => callback(null, data))
-            .catch((err) => callback(err));
-    }
-
-    async function promiseWrapper(event, context, callback) {
-        if (typeof context === 'function') {
-          callback = context;
-          context = undefined;
-        }
+    return async function promiseWrapper(event, context) {
         if (event.source === 'serverless-plugin-warmup') {
             return 'Lambda is warm';
         }
         const eventSource = getEventSource(event, context);
         const data = mapEvent(eventSource, event, context);
-        const {resp, error} = await safeFnExecution(fn, data, callback);
+        const {resp, error} = await safeFnExecution(fn, data);
         await sendNofication(topicArn, resp, error);
         return mapResponse(eventSource, event, resp, error);
     }
@@ -72,13 +60,30 @@ module.exports = function wrapper(fn, config) {
         
     }
 
-    async function safeFnExecution(fn, data, callback) {
+    async function safeFnExecution(fn, data){
         try {
-          return {resp: await fn(data, callback)};
+            return {resp: await asycronizer(fn, data)};
         }
         catch(e){
             return {error: e};
         }
+    }
+
+    
+    function asycronizer(fn, data){
+        return new Promise((resolve, reject) => {
+            let cb = (err, data) => {
+                if (err) return reject(err);
+                resolve(data); 
+            };
+            try {
+                const resp = fn(data, cb)
+                if(resp instanceof Promise) resp.then(resolve).catch(reject);
+            }
+            catch(e){
+                reject(e);
+            }
+        });
     }
 
     async function sendNofication(TopicArn, resp, error) {
@@ -104,8 +109,8 @@ module.exports = function wrapper(fn, config) {
 
     function mapResponse(mode, event, response, error) {
         return (mode === EVENT_SOURCE.HTTP)          ? httpEvent.response(response, error, log) :
-            (mode === EVENT_SOURCE.STEP_FUNCTION) ? mapStepFunctionResponse(event, response, error) :
-                                                    mapBasicResponse(response, error);
+               (mode === EVENT_SOURCE.STEP_FUNCTION) ? mapStepFunctionResponse(event, response, error) :
+                                                       mapBasicResponse(response, error);
     }
 
     function mapStepFunctionResponse(event, resp, error) {
