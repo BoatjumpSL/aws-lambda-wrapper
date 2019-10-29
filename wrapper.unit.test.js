@@ -9,6 +9,18 @@ function requireUncached(module){
 let lastLog;
 
 const fnMock = async (event) => ({code: 200, body: event});
+
+const callbackMockFunction = (event, callback) => {
+  // callback is executed on top function
+  callback(null, {
+    statusCode: 200,
+    headers: {'Content-Type': 'image/gif'},
+    body: 'pixelString',
+    isBase64Encoded: true
+  })
+  // no return function
+};
+
 const logMock = {
     error: (data) => lastLog = data,
     debug: (data) => lastLog = data
@@ -63,6 +75,16 @@ describe('wrapper', () => {
                 expect(data).to.be.deep.equal(event);
                 done();
             });
+        });
+
+        it('must execute callback on top function. Have to be executed only one time and the function does not return response', (done) => {
+          fn = wrapper(callbackMockFunction, {log: logMock});
+          fn(event, (err, data) => {
+            console.log(data);
+            expect(err).to.be.equal(null);
+            expect(data).to.be.deep.equal(event);
+            done();
+          });
         });
     });
 
