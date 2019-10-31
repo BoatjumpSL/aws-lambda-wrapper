@@ -1,0 +1,131 @@
+{
+    "resource": "/providersBrands",
+    "path": "/api/providersBrands",
+    "httpMethod": "GET",
+    "headers": {
+        "Accept": "*/*",
+        "Accept-Encoding": "gzip, deflate",
+        "Cache-Control": "no-cache",
+        "CloudFront-Forwarded-Proto": "https",
+        "CloudFront-Is-Desktop-Viewer": "true",
+        "CloudFront-Is-Mobile-Viewer": "false",
+        "CloudFront-Is-SmartTV-Viewer": "false",
+        "CloudFront-Is-Tablet-Viewer": "false",
+        "CloudFront-Viewer-Country": "ES",
+        "Host": "api.boatjump.com",
+        "Postman-Token": "79342eeb-f5f9-4743-b33d-5cc061d5571d",
+        "Referer": "http://api.boatjump.com/api/providersBrands?%40id=1",
+        "User-Agent": "PostmanRuntime/7.19.0",
+        "Via": "1.1 73596018e775c86271b93928c6afe2dd.cloudfront.net (CloudFront)",
+        "X-Amz-Cf-Id": "5Um9Eu_-uHnTegvkzDnaO9CZV0ObbWmYUDmEKpiRwGXXsnnynAePPQ==",
+        "x-amz-date": "20191031T144747Z",
+        "X-Amzn-Trace-Id": "Root=1-5dbaf416-35fd3f9024febc40012c3350",
+        "X-Forwarded-For": "46.25.71.106, 64.252.132.144",
+        "X-Forwarded-Port": "443",
+        "X-Forwarded-Proto": "https"
+    },
+    "multiValueHeaders": {
+        "Accept": [
+            "*/*"
+        ],
+        "Accept-Encoding": [
+            "gzip, deflate"
+        ],
+        "Cache-Control": [
+            "no-cache"
+        ],
+        "CloudFront-Forwarded-Proto": [
+            "https"
+        ],
+        "CloudFront-Is-Desktop-Viewer": [
+            "true"
+        ],
+        "CloudFront-Is-Mobile-Viewer": [
+            "false"
+        ],
+        "CloudFront-Is-SmartTV-Viewer": [
+            "false"
+        ],
+        "CloudFront-Is-Tablet-Viewer": [
+            "false"
+        ],
+        "CloudFront-Viewer-Country": [
+            "ES"
+        ],
+        "Host": [
+            "api.boatjump.com"
+        ],
+        "Postman-Token": [
+            "79342eeb-f5f9-4743-b33d-5cc061d5571d"
+        ],
+        "Referer": [
+            "http://api.boatjump.com/api/providersBrands?%40id=1"
+        ],
+        "User-Agent": [
+            "PostmanRuntime/7.19.0"
+        ],
+        "Via": [
+            "1.1 73596018e775c86271b93928c6afe2dd.cloudfront.net (CloudFront)"
+        ],
+        "X-Amz-Cf-Id": [
+            "5Um9Eu_-uHnTegvkzDnaO9CZV0ObbWmYUDmEKpiRwGXXsnnynAePPQ=="
+        ],
+        "x-amz-date": [
+            "20191031T144747Z"
+        ],
+        "X-Amzn-Trace-Id": [
+            "Root=1-5dbaf416-35fd3f9024febc40012c3350"
+        ],
+        "X-Forwarded-For": [
+            "46.25.71.106, 64.252.132.144"
+        ],
+        "X-Forwarded-Port": [
+            "443"
+        ],
+        "X-Forwarded-Proto": [
+            "https"
+        ]
+    },
+    "queryStringParameters": {
+        "@id": "1"
+    },
+    "multiValueQueryStringParameters": {
+        "@id": [
+            "1"
+        ]
+    },
+    "pathParameters": null,
+    "stageVariables": null,
+    "requestContext": {
+        "resourceId": "hu3hin",
+        "resourcePath": "/providersBrands",
+        "httpMethod": "GET",
+        "extendedRequestId": "CbsThEUYDoEFrtw=",
+        "requestTime": "31/Oct/2019:14:47:50 +0000",
+        "path": "/api/providersBrands",
+        "accountId": "015414317816",
+        "protocol": "HTTP/1.1",
+        "stage": "prod",
+        "domainPrefix": "api",
+        "requestTimeEpoch": 1572533270477,
+        "requestId": "df67c97e-dbdb-44e4-a814-040283e67c4d",
+        "identity": {
+            "cognitoIdentityPoolId": null,
+            "accountId": "015414317816",
+            "cognitoIdentityId": null,
+            "caller": "AIDAJMZ45KCSXQATAU22G",
+            "sourceIp": "46.25.71.106",
+            "principalOrgId": "o-s1y1nsyvhd",
+            "accessKey": "AKIAQHFWD2L4II23QJNK",
+            "cognitoAuthenticationType": null,
+            "cognitoAuthenticationProvider": null,
+            "userArn": "arn:aws:iam::015414317816:user/jovi",
+            "userAgent": "PostmanRuntime/7.19.0",
+            "user": "AIDAJMZ45KCSXQATAU22G"
+        },
+        "domainName": "api.boatjump.com",
+        "apiId": "gx1hzfaayi"
+    },
+    "body": null,
+    "isBase64Encoded": false
+}
