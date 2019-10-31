@@ -10,7 +10,7 @@ function requireUncached(module){
 
 let lastLog;
 
-const fnMock = (event, callback) => callback(null, {code: 200, body: event});
+const fnMock = async (event) => ({code: 200, body: event});
 
 const logMock = {
     error: (data) => lastLog = data,
@@ -45,7 +45,7 @@ describe('wrapper', () => {
         });
         expect(lastLog).to.be.an('object');
         expect(lastLog).to.contain.keys(['ResponseMetadata', 'MessageId'])
-    });
+    }).timeout(5000);
 
     describe('when called using callback', ()=> {
         fn = wrapper(fnMock, {log: logMock});
@@ -142,6 +142,22 @@ describe('wrapper', () => {
             });
 
         });
+
+        it('if it uses a GET method with query parameters, must return the status code and body', async () => {
+            const expectedResponse = {'@id': '1'};
+            const event = requireUncached('./events/getWithQueryParameters.json');
+            const fn = wrapper(fnMock, {log: logMock});
+            const resp = await fn(event);
+            expect(resp).to.be.deep.equal({
+                statusCode:200,
+                body: JSON.stringify(expectedResponse)
+            });
+            async function fnMock(input){
+                expect(input).to.be.deep.equal(expectedResponse)
+                return {code: 200, body: input};
+            }
+
+        });
     
         it('if it uses a POST method, must return the status code and body', async () => {
             const event = requireUncached('./events/post.json');
@@ -172,7 +188,6 @@ describe('wrapper', () => {
             expect(resp).to.have.keys('statusCode', 'body');
             expect(resp.statusCode).to.be.equal(201);
             expect(resp.body).to.be.equal(bodyMock);
-            expect
         });
     });
 });
