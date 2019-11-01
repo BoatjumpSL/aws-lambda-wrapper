@@ -13,14 +13,18 @@ module.exports = function wrapper(fn, config) {
     const topicArn = getParam(config, 'topicArn', undefined);
 
     return async function promiseWrapper(event, context) {
+        log.debug({event, context});
         if (event.source === 'serverless-plugin-warmup') {
             return 'Lambda is warm';
         }
         const eventSource = getEventSource(event, context);
         const data = mapEvent(eventSource, event, context);
+        log.debug({eventSource, wapperEventData: data});
         const {resp, error} = await safeFnExecution(fn, data);
         await sendNofication(topicArn, resp, error);
-        return mapResponse(eventSource, event, resp, error);
+        const response = mapResponse(eventSource, event, resp, error); 
+        log.debug(response);
+        return response;
     }
 
     function getParam(config, key, defaultValue) {
@@ -91,7 +95,7 @@ module.exports = function wrapper(fn, config) {
             if (error || !TopicArn) return;
             const Message = JSON.stringify(resp);
             const message = await getSNS().publish({Message, TopicArn}).promise()
-            log.debug(message);
+            log.info(message);
         }
         catch(e){
             e.message = `Fail while sending a notification to ${TopicArn}. `+e.message;

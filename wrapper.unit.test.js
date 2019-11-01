@@ -13,15 +13,16 @@ let lastLog;
 const fnMock = async (event) => ({code: 200, body: event});
 
 const logMock = {
+    debug: (data) => {},
     error: (data) => lastLog = data,
-    debug: (data) => lastLog = data
+    info: (data) => lastLog = data
 };
 
 describe('wrapper', () => {
     let fn;
 
     it('must return a function', async () => {
-        fn = wrapper(fnMock, {log: logMock});
+        fn = wrapper(fnMock, {logger: logMock});
         expect(fn).to.be.a('function');
     });
 
@@ -48,7 +49,7 @@ describe('wrapper', () => {
     }).timeout(5000);
 
     describe('when called using callback', ()=> {
-        fn = wrapper(fnMock, {log: logMock});
+        fn = wrapper(fnMock, {logger: logMock});
         const event = {event: "hello"};
 
         it('must allow usage with context', async () => {
@@ -67,7 +68,7 @@ describe('wrapper', () => {
             const fnMockUsingCallback = (event, callback) => {
                 callback(error);
             };
-            const fn = wrapper(fnMockUsingCallback, {log: logMock});
+            const fn = wrapper(fnMockUsingCallback, {logger: logMock});
             const respPromise = fn(event);
             await expect(respPromise).to.be.rejectedWith(Error);
         });
@@ -77,7 +78,7 @@ describe('wrapper', () => {
             const fnMockUsingCallback = (event, callback) => {
                 throw(error);
             };
-            const fn = wrapper(fnMockUsingCallback, {log: logMock});
+            const fn = wrapper(fnMockUsingCallback, {logger: logMock});
             const respPromise = fn(event);
             await expect(respPromise).to.be.rejectedWith(Error);
         });
@@ -93,7 +94,7 @@ describe('wrapper', () => {
             const fnMockUsingCallback = (event, callback) => {
                 callback(null, fnResponse);
             };
-            const fn = wrapper(fnMockUsingCallback, {log: logMock});
+            const fn = wrapper(fnMockUsingCallback, {logger: logMock});
             const resp = await fn(event);
             expect(resp).to.be.deep.equal(fnResponse);
         });
@@ -146,7 +147,7 @@ describe('wrapper', () => {
         it('if it uses a GET method with query parameters, must return the status code and body', async () => {
             const expectedResponse = {'@id': '1'};
             const event = requireUncached('./events/getWithQueryParameters.json');
-            const fn = wrapper(fnMock, {log: logMock});
+            const fn = wrapper(fnMock, {logger: logMock});
             const resp = await fn(event);
             expect(resp).to.be.deep.equal({
                 statusCode:200,
@@ -171,8 +172,8 @@ describe('wrapper', () => {
         it('must return the same result if the function response does not contain code and body', async () => {
             const fnMockDirect = async (event) => (event);
             const event = requireUncached('./events/get.json');
-            const wrappedFnStandard = wrapper(fnMock);
-            const wrappedFnDirect   = wrapper(fnMockDirect);
+            const wrappedFnStandard = wrapper(fnMock, {logger: logMock});
+            const wrappedFnDirect   = wrapper(fnMockDirect, {logger: logMock});
             const respStandard = await wrappedFnStandard(event);
             const respDirect   = await wrappedFnDirect(event);
             expect(respStandard).to.be.deep.equal(respDirect);
@@ -183,7 +184,7 @@ describe('wrapper', () => {
             const bodyMock = {data: 'ok'};
             const fnMockProxy = async (event) => ({statusCode: 201, body: bodyMock});
             const event = requireUncached('./events/get.json');
-            const wrappedFn = wrapper(fnMockProxy);
+            const wrappedFn = wrapper(fnMockProxy, {logger: logMock});
             const resp = await wrappedFn(event);
             expect(resp).to.have.keys('statusCode', 'body');
             expect(resp.statusCode).to.be.equal(201);
