@@ -127,6 +127,6 @@ module.exports = function wrapper(fn, config) {
 
     function mapBasicResponse(resp, error) {
         if(error) throw error;
-        return resp.body;
+        return resp.body || resp;
     }
 }
