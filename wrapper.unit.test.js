@@ -133,6 +133,14 @@ describe('wrapper', () => {
         });
     });
 
+    describe('on cron events', () => {
+        it('must return the response unchanged', async () => {
+            const event = requireUncached('./events/cron.json');
+            const resp = await fn(event);
+            expect(resp).to.be.deep.equal(event);
+        });
+    });
+
     describe('on http events', () => {
         it('if it uses a GET method, must return the status code and body', async () => {
             const event = requireUncached('./events/get.json');
