@@ -4,6 +4,7 @@ var httpEvent = require('./lib/httpEvent');
 const EVENT_SOURCE = {
     HTTP         : 'http',
     STEP_FUNCTION: 'stepFunctions',
+    CRON         : 'cron',
     BASIC        : 'basic'
 }
 
@@ -32,13 +33,19 @@ module.exports = function wrapper(fn, config) {
     }
 
     function getEventSource(event, context){
-        return (event   &&   event.httpMethod)   ? EVENT_SOURCE.HTTP :
+        return (event   && event.httpMethod)     ? EVENT_SOURCE.HTTP :
+               (event   && isCronEvent(event))   ? EVENT_SOURCE.CRON :
                (context && context.functionName) ? EVENT_SOURCE.STEP_FUNCTION :
                                                    EVENT_SOURCE.BASIC;
     }
 
+    function isCronEvent(event){
+        return (event['detail-type'] === 'Scheduled Event');
+    }
+
     function mapEvent(eventSource, event, context){
         return  (eventSource === EVENT_SOURCE.BASIC)         ? mapBasicEvent(event, context) :
+                (eventSource === EVENT_SOURCE.CRON )         ? mapBasicEvent(event, context) :
                 (eventSource === EVENT_SOURCE.STEP_FUNCTION) ? mapStepFunctionsEvent(event, context) :    
                                                                httpEvent.parse(event, context, log);
     }
