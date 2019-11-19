@@ -152,6 +152,16 @@ describe('wrapper', () => {
 
         });
 
+        it('must support the usage of comparative parameters', async () => {
+            const event = requireUncached('./events/get.json');
+            event.multiValueQueryStringParameters = {'price<1000': null};
+            const resp = await fn(event);
+            expect(resp).to.be.deep.equal({
+                statusCode:200,
+                body: '{"price<1000":null,"id":"1234"}'
+            });
+        });
+
         it('if it uses a GET method with query parameters, must return the status code and body', async () => {
             const expectedResponse = {'@id': '1'};
             const event = requireUncached('./events/getWithQueryParameters.json');
