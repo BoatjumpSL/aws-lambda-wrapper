@@ -119,7 +119,7 @@ module.exports = function wrapper(fn, config) {
     }
 
     function mapResponse(mode, event, response, error) {
-        return (mode === EVENT_SOURCE.HTTP)          ? httpEvent.response(response, error, log) :
+        return (mode === EVENT_SOURCE.HTTP)          ? httpEvent.response(event, response, error, log) :
                (mode === EVENT_SOURCE.STEP_FUNCTION) ? mapStepFunctionResponse(event, response, error) :
                                                        mapBasicResponse(response, error);
     }
