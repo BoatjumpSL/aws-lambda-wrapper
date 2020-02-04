@@ -42,6 +42,7 @@ describe('wrapper', () => {
         const resp = await wrappedFn(event);
         expect(resp).to.be.deep.equal({
             statusCode:200,
+            headers: {},
             body: '{"to":"s.falcon@boatjump.com","from":"s.falcon@boatjump.com","subject":"test","message":"test, test, test"}'
         });
         expect(lastLog).to.be.an('object');
@@ -147,6 +148,7 @@ describe('wrapper', () => {
             const resp = await fn(event);
             expect(resp).to.be.deep.equal({
                 statusCode:200,
+                headers: {},
                 body: '{"token":"5678","id":"1234"}'
             });
 
@@ -158,6 +160,7 @@ describe('wrapper', () => {
             const resp = await fn(event);
             expect(resp).to.be.deep.equal({
                 statusCode:200,
+                headers: {},
                 body: '{"price<1000":null,"id":"1234"}'
             });
         });
@@ -169,6 +172,7 @@ describe('wrapper', () => {
             const resp = await fn(event);
             expect(resp).to.be.deep.equal({
                 statusCode:200,
+                headers: {},
                 body: JSON.stringify(expectedResponse)
             });
             async function fnMock(input){
@@ -183,6 +187,7 @@ describe('wrapper', () => {
             const resp = await fn(event);
             expect(resp).to.be.deep.equal({
                 statusCode:200,
+                headers: {},
                 body: '{"to":"s.falcon@boatjump.com","from":"s.falcon@boatjump.com","subject":"test","message":"test, test, test"}'
             });
         });
@@ -195,7 +200,7 @@ describe('wrapper', () => {
             const respStandard = await wrappedFnStandard(event);
             const respDirect   = await wrappedFnDirect(event);
             expect(respStandard).to.be.deep.equal(respDirect);
-            expect(respStandard).to.have.keys('statusCode', 'body');
+            expect(respStandard).to.have.keys('statusCode', 'headers', 'body');
         });
 
         it('must work as a proxy if status code is provided', async () => {
@@ -207,6 +212,61 @@ describe('wrapper', () => {
             expect(resp).to.have.keys('statusCode', 'body');
             expect(resp.statusCode).to.be.equal(201);
             expect(resp.body).to.be.equal(bodyMock);
+        });
+
+        it('must return the correct CORS headers in requests made by allowed hosts specified in env vars', async () => {
+            const event = requireUncached('./events/get.json');
+            const requestOrigin = event.headers.Host
+            process.env.ALLOWED_ORIGINS = requestOrigin
+
+            const resp = await fn(event);
+            expect(resp).to.be.deep.equal({
+                statusCode:200,
+                headers:            {
+                    'Access-Control-Allow-Origin': requestOrigin,
+                    'Access-Control-Allow-Credentials': true,
+                  },
+                body: '{"token":"5678","id":"1234"}'
+            });
+        });
+
+        it('must return empty headers when the host making the request doesn\'t match any hosts specified in env vars', async () => {
+            const event = requireUncached('./events/get.json');
+            process.env.ALLOWED_ORIGINS = 'this.willfail;thisone.too'
+
+            const resp = await fn(event);
+            expect(resp).to.be.deep.equal({
+                statusCode: 200,
+                headers: {},
+                body: '{"token":"5678","id":"1234"}'
+            });
+        });
+
+        it('must return empty headers when no allowed hosts are specified in env vars', async () => {
+            const event = requireUncached('./events/get.json');
+            const resp = await fn(event);
+            expect(resp).to.be.deep.equal({
+                statusCode: 200,
+                headers: {},
+                body: '{"token":"5678","id":"1234"}'
+            });
+        });
+
+        it('must return the correct CORS headers if allowed host subdomains are specified in env vars', async () => {
+            const event = requireUncached('./events/get.json');
+            event.headers.Host = 'www.something.example.com'
+            const requestOrigin = event.headers.Host
+            process.env.ALLOWED_ORIGINS = '*.example.com;*.anotherone.com'
+
+            const resp = await fn(event);
+            expect(resp).to.be.deep.equal({
+                statusCode:200,
+                headers:            {
+                    'Access-Control-Allow-Origin': requestOrigin,
+                    'Access-Control-Allow-Credentials': true,
+                  },
+                body: '{"token":"5678","id":"1234"}'
+            });
         });
     });
 });
