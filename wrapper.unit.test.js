@@ -42,7 +42,6 @@ describe('wrapper', () => {
         const resp = await wrappedFn(event);
         expect(resp).to.be.deep.equal({
             statusCode:200,
-            headers: {},
             body: '{"to":"s.falcon@boatjump.com","from":"s.falcon@boatjump.com","subject":"test","message":"test, test, test"}'
         });
         expect(lastLog).to.be.an('object');
@@ -148,7 +147,6 @@ describe('wrapper', () => {
             const resp = await fn(event);
             expect(resp).to.be.deep.equal({
                 statusCode:200,
-                headers: {},
                 body: '{"token":"5678","id":"1234"}'
             });
 
@@ -160,7 +158,6 @@ describe('wrapper', () => {
             const resp = await fn(event);
             expect(resp).to.be.deep.equal({
                 statusCode:200,
-                headers: {},
                 body: '{"price<1000":null,"id":"1234"}'
             });
         });
@@ -172,7 +169,6 @@ describe('wrapper', () => {
             const resp = await fn(event);
             expect(resp).to.be.deep.equal({
                 statusCode:200,
-                headers: {},
                 body: JSON.stringify(expectedResponse)
             });
             async function fnMock(input){
@@ -187,7 +183,6 @@ describe('wrapper', () => {
             const resp = await fn(event);
             expect(resp).to.be.deep.equal({
                 statusCode:200,
-                headers: {},
                 body: '{"to":"s.falcon@boatjump.com","from":"s.falcon@boatjump.com","subject":"test","message":"test, test, test"}'
             });
         });
@@ -200,7 +195,7 @@ describe('wrapper', () => {
             const respStandard = await wrappedFnStandard(event);
             const respDirect   = await wrappedFnDirect(event);
             expect(respStandard).to.be.deep.equal(respDirect);
-            expect(respStandard).to.have.keys('statusCode', 'headers', 'body');
+            expect(respStandard).to.have.keys('statusCode', 'body');
         });
 
         it('must work as a proxy if status code is provided', async () => {
@@ -209,7 +204,7 @@ describe('wrapper', () => {
             const event = requireUncached('./events/get.json');
             const wrappedFn = wrapper(fnMockProxy, {logger: logMock});
             const resp = await wrappedFn(event);
-            expect(resp).to.have.keys('statusCode', 'headers', 'body');
+            expect(resp).to.have.keys('statusCode', 'body');
             expect(resp.statusCode).to.be.equal(201);
             expect(resp.body).to.be.equal(bodyMock);
         });
@@ -237,7 +232,6 @@ describe('wrapper', () => {
             const resp = await fn(event);
             expect(resp).to.be.deep.equal({
                 statusCode: 200,
-                headers: {},
                 body: '{"token":"5678","id":"1234"}'
             });
         });
@@ -247,7 +241,6 @@ describe('wrapper', () => {
             const resp = await fn(event);
             expect(resp).to.be.deep.equal({
                 statusCode: 200,
-                headers: {},
                 body: '{"token":"5678","id":"1234"}'
             });
         });
