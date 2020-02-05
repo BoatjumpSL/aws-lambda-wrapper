@@ -209,7 +209,7 @@ describe('wrapper', () => {
             const event = requireUncached('./events/get.json');
             const wrappedFn = wrapper(fnMockProxy, {logger: logMock});
             const resp = await wrappedFn(event);
-            expect(resp).to.have.keys('statusCode', 'body');
+            expect(resp).to.have.keys('statusCode', 'headers', 'body');
             expect(resp.statusCode).to.be.equal(201);
             expect(resp.body).to.be.equal(bodyMock);
         });
