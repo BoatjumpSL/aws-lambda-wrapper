@@ -211,7 +211,8 @@ describe('wrapper', () => {
 
         it('must return the correct CORS headers in requests made by allowed hosts specified in env vars', async () => {
             const event = requireUncached('./events/get.json');
-            const requestOrigin = event.headers.Host
+            event.headers.origin = 'www.something.example.com'
+            const requestOrigin = event.headers.origin
             process.env.ALLOWED_ORIGINS = requestOrigin
 
             const resp = await fn(event);
@@ -227,6 +228,7 @@ describe('wrapper', () => {
 
         it('must return empty headers when the host making the request doesn\'t match any hosts specified in env vars', async () => {
             const event = requireUncached('./events/get.json');
+            event.headers.origin = 'www.something.example.com'
             process.env.ALLOWED_ORIGINS = 'this.willfail;thisone.too'
 
             const resp = await fn(event);
@@ -238,6 +240,8 @@ describe('wrapper', () => {
 
         it('must return empty headers when no allowed hosts are specified in env vars', async () => {
             const event = requireUncached('./events/get.json');
+            event.headers.origin = 'www.something.example.com'
+
             const resp = await fn(event);
             expect(resp).to.be.deep.equal({
                 statusCode: 200,
@@ -247,8 +251,8 @@ describe('wrapper', () => {
 
         it('must return the correct CORS headers if allowed host subdomains are specified in env vars', async () => {
             const event = requireUncached('./events/get.json');
-            event.headers.Host = 'www.something.example.com'
-            const requestOrigin = event.headers.Host
+            event.headers.origin = 'www.something.example.com'
+            const requestOrigin = event.headers.origin
             process.env.ALLOWED_ORIGINS = '*.example.com;*.anotherone.com'
 
             const resp = await fn(event);
